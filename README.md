@@ -117,6 +117,22 @@ npm install && npm run dev
 
 **Prerequisites:** [Python 3.11+](https://python.org) | [Node 18+](https://nodejs.org) | [Ollama](https://ollama.ai) | [Docker](https://docker.com)
 
+### Render Deploy
+
+If you deploy on Render, set the frontend build to use `VITE_API_BASE_URL` and configure the backend with `CORS_ORIGINS`.
+
+```bash
+# backend service envs
+OLLAMA_HOST=http://<your-ollama-host>:11434
+DEFAULT_MODEL=llama3
+CORS_ORIGINS=https://<your-frontend>.onrender.com
+
+# frontend static site envs
+VITE_API_BASE_URL=https://<your-backend>.onrender.com/api
+```
+
+The included `render.yaml` defines a backend web service and a frontend static site for the same repo.
+
 ---
 
 ## 📁 Project Structure
