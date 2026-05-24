@@ -68,7 +68,7 @@ export default function App() {
           }
         );
       } catch (e) {
-        setMessages(prev => prev.map(m => m.id === aiMsg.id ? { ...m, content: "❌ " + e.message, streaming: false } : m));
+        setMessages(prev => prev.map(m => m.id === aiMsg.id ? { ...m, content: e.message, streaming: false } : m));
       } finally { setStreaming(false); }
     } else {
       setLoading(true);
@@ -77,7 +77,7 @@ export default function App() {
         setMessages(prev => [...prev, { role: "assistant", content: data.reply, sources: data.sources || [], id: Date.now() + 1 }]);
         refreshSessions();
       } catch (e) {
-        setMessages(prev => [...prev, { role: "assistant", content: "❌ " + e.message, id: Date.now() + 1 }]);
+        setMessages(prev => [...prev, { role: "assistant", content: e.message, id: Date.now() + 1 }]);
       } finally { setLoading(false); }
     }
   }
