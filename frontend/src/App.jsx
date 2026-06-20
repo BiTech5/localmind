@@ -185,20 +185,28 @@ export default function App() {
     refreshSessions();
   }
 
+
   async function loadSession(sid) {
     setSessionId(sid);
     setPanel(null);
     try {
-      const [msgRes, docRes] = await Promise.all([api.getMessages(sid), api.getDocuments(sid)]);
+      const [msgRes, docRes, freshSessions] = await Promise.all([
+        api.getMessages(sid),
+        api.getDocuments(sid),
+        api.getSessions(),
+      ]);
       setMessages((msgRes.messages || []).map((m, i) => ({ ...m, id: m.id ?? i })));
       setDocuments(docRes.documents || []);
 
-      const sess = sessions.find(s => s.id === sid);
+      // Use freshly fetched sessions to avoid stale closure bug
+      const sess = (freshSessions || []).find(s => s.id === sid);
       if (sess) {
         setLanguage(sess.language || settings.default_language || "en");
+        setSessions((freshSessions || []).map(s => ({ ...s, color: getSessionColor(s.id) })));
       }
     } catch { }
   }
+
 
   async function handleDeleteMessage(messageId) {
     // Optimistically remove from the thread for instant feedback.
